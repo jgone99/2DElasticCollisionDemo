@@ -51,6 +51,8 @@ private:
 		olc::vf2d velocity2;
 		olc::vf2d collisionN;
 		float adjust;
+		
+		// resolve collision between two circles
 		void collide()
 		{
 			adjust = circle1.radius + circle2.radius - circle1.distanceTo(circle2) + 0.1f;
@@ -122,6 +124,7 @@ public:
 
 		DrawString({ 1, 1 }, "Shape: " + shapeString);
 
+		// adjust circle radius at creation
 		if (enable)
 		{
 			dWheel = -GetMouseWheel() / 120;
@@ -130,7 +133,7 @@ public:
 			DrawLine(circleCreate->position(), GetMousePos());
 		}
 
-
+		// keep circles inside console window
 		for (size_t i = 0; i < circles.size(); i++)
 		{
 			Circle& circle = circles[i];
@@ -148,6 +151,7 @@ public:
 				circle.dy = -circle.dy;
 			}
 
+			// check collision between every circle pair. this is probably inefficient.
 			for (size_t k = i + 1; k < circles.size(); k++)
 				if (circle.distanceTo(circles[k]) <= circle.radius + circles[k].radius)
 				{
@@ -160,6 +164,7 @@ public:
 			DrawLine(circle.position(), circle.position() + circle.velocity().norm() * circle.radius);
 		}
 
+		// create a new circle
 		if (GetMouse(0).bPressed)
 		{
 			mouseX_initial = GetMouseX();
@@ -168,6 +173,7 @@ public:
 			enable = true;
 		}
 
+		// add the newly created circle to the sandbox
 		if (GetMouse(0).bReleased)
 		{
 			if (circleCreate != nullptr)
@@ -183,6 +189,7 @@ public:
 
 		}
 
+		// cancel circle creation
 		if (GetMouse(1).bPressed)
 		{
 			delete circleCreate;
