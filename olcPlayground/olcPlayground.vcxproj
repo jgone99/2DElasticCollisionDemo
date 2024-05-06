@@ -24,6 +24,7 @@
     <ProjectGuid>{e6f16342-2a79-4e66-9940-b0839b0f3425}</ProjectGuid>
     <RootNamespace>olcPlayground</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>2DElasticCollisionDemo</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

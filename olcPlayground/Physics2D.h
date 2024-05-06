@@ -57,25 +57,13 @@ private:
 		{
 			adjust = circle1.radius + circle2.radius - circle1.distanceTo(circle2) + 0.1f;
 			collisionN = circle1.vectorTo(circle2).norm();
-			std::cout << "adjust = " << adjust << std::endl;
-			std::cout << "p1 = " << circle1.position() << std::endl << "p2 = " << circle2.position() << std::endl;
-			std::cout << "p1 - " << adjust * collisionN * 0.5f << std::endl << "p2 - " << adjust * collisionN * 0.5f << std::endl;
 			circle1.setPosition(circle1.position() - adjust * collisionN * 0.5f);
 			circle2.setPosition(circle2.position() + adjust * collisionN * 0.5f);
-			std::cout << "p1' = " << circle1.position() << std::endl << "p2' = " << circle2.position() << std::endl;
 			velocity1 = circle1.velocity();
 			velocity2 = circle2.velocity();
 			collisionN = circle1.vectorTo(circle2).norm();
 			circle1.setVelocity(velocity1 - (2 * circle2.radius / (circle1.radius + circle2.radius)) * (velocity1 - velocity2).dot(collisionN) * collisionN);
 			circle2.setVelocity(velocity2 - (2 * circle1.radius / (circle1.radius + circle2.radius)) * (velocity2 - velocity1).dot(collisionN) * collisionN);
-			std::cout << "v1 = " << velocity1 << std::endl
-				<< "v2 = " << velocity2 << std::endl
-				<< "v1' = " << circle1.velocity() << std::endl
-				<< "v2' = " << circle2.velocity() << std::endl
-				<< "m1v1x + m2v2x = " << circle1.radius * velocity1.x + circle2.radius * velocity2.x << std::endl
-				<< "m1v1x' + m2v2x' = " << circle1.radius * circle1.velocity().x + circle2.radius * circle2.velocity().x << std::endl
-				<< "m1v1y + m1v2y = " << circle1.radius * velocity1.y + circle2.radius * velocity2.y << std::endl
-				<< "m1v1y' + m2v2y' = " << circle1.radius * circle1.velocity().y + circle2.radius * circle2.velocity().y << std::endl << std::endl;
 		}
 	};
 	int32_t mouseX_initial;
@@ -95,10 +83,7 @@ public:
 	Physics2D()
 	{
 		sAppName = "Simple 2D Physics Engine";
-
 	}
-
-
 
 	bool OnUserCreate() override
 	{
@@ -129,8 +114,10 @@ public:
 		{
 			dWheel = -GetMouseWheel() / 120;
 			circleCreate->radius += (float)dWheel;
+			circleCreate->radius = circleCreate->radius < 1 ? 1 : circleCreate->radius;
 			DrawCircle((int32_t)circleCreate->x, (int32_t)circleCreate->y, (int32_t)circleCreate->radius);
 			DrawLine(circleCreate->position(), GetMousePos());
+			DrawString({ (int32_t)circleCreate->x + (int32_t)circleCreate->radius + 10, (int32_t)circleCreate->y }, "radius: " + std::to_string(circleCreate->radius));
 		}
 
 		// keep circles inside console window
@@ -155,7 +142,6 @@ public:
 			for (size_t k = i + 1; k < circles.size(); k++)
 				if (circle.distanceTo(circles[k]) <= circle.radius + circles[k].radius)
 				{
-					std::cout << ++collisionCount << std::endl;
 					Collision({ circle, circles[k] }).collide();
 				}
 
@@ -186,7 +172,6 @@ public:
 				DrawCircle(mouseX_initial, mouseY_initial, (int32_t)circles.back().radius);
 				DrawLine(circles.back().position(), circles.back().position() + circles.back().velocity().norm() * circles.back().radius);
 			}
-
 		}
 
 		// cancel circle creation
@@ -201,11 +186,3 @@ public:
 	}
 
 };
-
-int main()
-{
-	Physics2D engine;
-	if (engine.Construct(526, 400, 2, 2))
-		engine.Start();
-	return 0;
-}
